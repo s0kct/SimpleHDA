@@ -45,7 +45,7 @@ for configuration in ('Debug', 'Release'):
     stage.mkdir()
     shutil.copytree(root / 'Build' / configuration / 'SimpleHDA.kext', stage / 'SimpleHDA.kext')
     shutil.copy2(package, stage / package.name)
-    for filename in ('README.md', 'README.en.md', 'NOTICE.md'):
+    for filename in ('README.md', 'README.id.md', 'NOTICE.md'):
         shutil.copy2(root / filename, stage / filename)
     tools = stage / 'Tools'
     tools.mkdir()
