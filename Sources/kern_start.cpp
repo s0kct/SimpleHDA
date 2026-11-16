@@ -29,7 +29,6 @@ extern "C" {
 }
 
 namespace {
-KernelPatcher *runtimePatcher;
 struct __attribute__((trivial_abi)) OwnedObject {
     OSObject *value;
     ~OwnedObject() { if (value) value->release(); }
@@ -227,9 +226,6 @@ bool run() {
             command += c->cmdsize;
         }
         if (bindings != shda::localizationImportCount) { state("localization-symbols-missing"); return false; }
-        if (!runtimePatcher || !shda::routeSelectorLocalization(*runtimePatcher)) {
-            state("selector-localization-hook-failed"); return false;
-        }
     }
     if (!shda::interfaceFor(dependencies[0].buffer, kernelInterface)) { state("kernel-interface-failed"); return false; }
     if (!redirectResources(dependencies[0].buffer)) { state("resource-symbols-missing"); return false; }
@@ -322,7 +318,6 @@ OSReturn fileset(OSDictionary *request) {
     return result;
 }
 void patcherReady(void *, KernelPatcher &patcher) {
-    runtimePatcher = &patcher;
     state("patcher-ready");
     shda::configureHAL();
     const char *symbols[] {

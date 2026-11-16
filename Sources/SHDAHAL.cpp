@@ -47,6 +47,10 @@ bool configureHAL() {
     return enabled;
 }
 bool setAudioProperty(IORegistryEntry *entry, const char *key, const char *value) {
+    // Replace the embedded AppleHDA resource path, scoped to payload imports.
+    if (key && !strcmp(key, "IOAudioDeviceLocalizedBundle"))
+        return entry->IORegistryEntry::setProperty(key,
+            "../../../Library/Audio/Plug-Ins/SimpleHDA/SimpleHDALocalization.bundle");
     if (key && value && !strcmp(key, "IOAudioEngineCoreAudioPlugIn") &&
         !strcmp(value, "AppleHDA.kext/Contents/PlugIns/AppleHDAHALPlugIn.bundle")) {
         bool available = enabled && installed();
